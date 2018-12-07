@@ -1,0 +1,40 @@
+------------------------------------------------------------
+2018-12-07 23:17 ETL process start 
+------------------------------------------------------------
+------------------------------------------------------------
+2018-12-07 23:17 ETL process start 
+------------------------------------------------------------
+------------------------------------------------------------
+2018-12-07 23:19 ETL process start 
+------------------------------------------------------------
+2018-12-07 23:20 -- from start: 1 min -- from prev : 1 min -- counting removed reviews: 10614 --
+2018-12-07 23:20 -- from start: 1 min -- from prev : 1 min -- starting detect_Eng --
+------------------------------------------------------------
+2018-12-07 23:35 ETL process start 
+------------------------------------------------------------
+2018-12-07 23:36 -- from start: 0 min -- from prev : 0 min -- counting removed reviews: 10614 --
+2018-12-07 23:36 -- from start: 0 min -- from prev : 0 min -- starting detect_Eng --
+2018-12-08 00:06 -- from start: 31 min -- from prev : 31 min -- counted not english rev, removed:10724 --
+2018-12-08 00:06 -- from start: 31 min -- from prev : 31 min -- starting country extraction --
+2018-12-08 00:06 -- from start: 31 min -- from prev : 31 min -- started final join and write to hdfs --
+2018-12-08 00:21 -- from start: 46 min -- from prev : 46 min -- etl notebook finished --
+------------------------------------------------------------
+2018-12-08 00:21  
+------------------------------------------------------------
+------------------------------------------------------------
+2018-12-08 00:27 Feature extraction starting 
+------------------------------------------------------------
+------------------------------------------------------------
+2018-12-08 00:35 Feature extraction starting 
+------------------------------------------------------------
+2018-12-08 00:36 -- from start: 0 min -- from prev : 0 min -- starting triples extraction --
+2018-12-08 00:36 -- from start: 1 min -- from prev : 1 min -- starting Word2Vec --
+2018-12-08 00:37 -- from start: 2 min -- from prev : 2 min -- start group by hotel/categories --
+2018-12-08 00:37 -- from start: 2 min -- from prev : 2 min -- end feature extraction --
+------------------------------------------------------------
+2018-12-08 00:37   
+------------------------------------------------------------
+------------------------------------------------------------
+2018-12-08 00:43 Feature extraction starting 
+------------------------------------------------------------
+2018-12-08 00:43 -- from start: 0 min -- from prev : 0 min -- starting triples extraction --

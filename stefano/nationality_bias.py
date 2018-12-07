@@ -15,7 +15,6 @@ df_cleaned.printSchema()
 df_cleaned.take(3)
 
 
-
 # ## Hotel City-Nationality Extraction
 
 import reverse_geocode
@@ -127,6 +126,97 @@ FROM nationality \
 GROUP BY Abroad \
 ORDER BY AVG_SCORE DESC \
 ").show()
+
+'''
+Si osserva che i reviewers di differenti nazionalità danno voti 
+differenti, ad esempio i cittadini statunitensi danno mediamente 
+voti piu alti, mentre quelli dei paesi medioorientali quali Emirati Arabi, Oman, Pakistan Arabia saudita tendono a dare voti piu bassi. 
+I voti degli alberghi potrebbero essere corretti tenendo in considerazione questi bias. 
+
+Qual'è il valor medio da considerare? Gli USA pesano molto, poiché 
+hanno molti turisti, quindi la media è spostata verso l'alto, 
+ma un effetto simile si puo avere anche sulla mediana. 
+
+Come voto medio, su cui poi calcolare lo scarto possiamo prendere 
+il paese mediano, ovvero calcolare la mediana delle medie o mediane. 
+
+Come si calcola la mediana in modo distribuito? 
+Provare a fare una funzione con map/reduce/pyspark! 
+
+'''
+
+spark.sql("SELECT Reviewer_Nationality,  COUNT(*) AS N, \
+AVG(Reviewer_Score) AS AVG_SCORE, \
+STDDEV(Reviewer_Score) AS S \
+FROM nationality \
+GROUP BY Reviewer_Nationality  \
+HAVING N> 500 \
+ORDER BY AVG_SCORE DESC \
+").show(200)
+
+
+df_countries_avgs = spark.sql("SELECT Reviewer_Nationality,  COUNT(*) AS N, \
+AVG(Reviewer_Score) AS AVG_SCORE, \
+STDDEV(Reviewer_Score) AS S \
+FROM nationality \
+GROUP BY Reviewer_Nationality  \
+HAVING N> 500 \
+ORDER BY AVG_SCORE DESC \
+")
+
+df_countries_avgs.show()
+
+pprint(rdd_countries_avgs.take(10))
+
+
+''' come calcolare i quantili in pyspark ? ''' 
+
+
+df_nationality.approxQuantile('Reviewer_Score', [0.25,0.5,0.75], 0.001)
+
+
+df_nationality.groupby('Reviewer_Nationality').agg('Reviewer_Score', [0.25,0.5,0.75], 0.001)
+
+
+import pyspark.sql.functions as func
+
+def median(values_list):
+    med = np.median(values_list)
+    return float(med)
+udf_median = func.udf(median)
+udf_median = func.udf(median, spark.sql.types.FloatType())
+
+group_df = df.groupby(['a', 'd'])
+df_grouped = group_df.agg(udf_median(func.collect_list(col('c'))).alias('median'))
+df_grouped.show()
+
+
+from pyspark.sql.window import Window
+from pyspark.sql.functions import percent_rank,col,count
+
+w =  Window.partitionBy('Reviewer_Nationality').orderBy(df_nationality.Reviewer_Score )
+
+
+df_median_countries = df_nationality.select('Reviewer_Nationality',
+                      'Reviewer_Score',
+                      percent_rank().over(w).alias("percentile"),
+                      count(col('Reviewer_Nationality')).over(w).alias('N'))\
+.orderBy('N', ascending = False)\
+.where('percentile>0.48 and percentile<0.52')
+
+
+spark.catalog.dropTempView("medians")
+
+df_median_countries.createTempView('medians')
+
+spark.sql("SELECT * FROM medians").show()
+
+spark.sql("SELECT Reviewer_Nationality, \ 
+AVG(percentile) AS PERC \
+FROM medians\
+GROUP BY Reviewer_Nationality\
+").show()
+
 
 
 ###########################################################

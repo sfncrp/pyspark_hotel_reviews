@@ -4,9 +4,7 @@
    "cell_type": "code",
    "execution_count": 1,
    "metadata": {
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": [
@@ -21,11 +19,7 @@
   {
    "cell_type": "code",
    "execution_count": 2,
-   "metadata": {
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "outputs": [
     {
      "name": "stdout",
@@ -63,9 +57,7 @@
    "cell_type": "code",
    "execution_count": 3,
    "metadata": {
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": [
@@ -75,11 +67,7 @@
   {
    "cell_type": "code",
    "execution_count": 4,
-   "metadata": {
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "outputs": [
     {
      "name": "stdout",
@@ -126,18 +114,12 @@
   },
   {
    "cell_type": "raw",
-   "metadata": {
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "source": []
   },
   {
    "cell_type": "markdown",
-   "metadata": {
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "source": [
     "## Reviews transformation"
    ]
@@ -146,9 +128,7 @@
    "cell_type": "code",
    "execution_count": 5,
    "metadata": {
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": [
@@ -170,9 +150,7 @@
    "cell_type": "code",
    "execution_count": 6,
    "metadata": {
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": [
@@ -193,11 +171,7 @@
   {
    "cell_type": "code",
    "execution_count": 53,
-   "metadata": {
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "outputs": [
     {
      "data": {
@@ -219,11 +193,7 @@
   {
    "cell_type": "code",
    "execution_count": 7,
-   "metadata": {
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "rdd_reviews = (df_raw_id.rdd.map(lambda x: (x['id'], catReviews(x)))\n",
@@ -236,9 +206,7 @@
    "cell_type": "code",
    "execution_count": null,
    "metadata": {
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": [
@@ -249,9 +217,6 @@
    "cell_type": "code",
    "execution_count": 33,
    "metadata": {
-    "collapsed": true,
-    "deletable": true,
-    "editable": true,
     "scrolled": true
    },
    "outputs": [],
@@ -261,9 +226,7 @@
    "cell_type": "code",
    "execution_count": null,
    "metadata": {
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": []
@@ -272,19 +235,14 @@
    "cell_type": "code",
    "execution_count": null,
    "metadata": {
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": []
   },
   {
    "cell_type": "markdown",
-   "metadata": {
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "source": [
     "# Keep only English reviews"
    ]
@@ -293,9 +251,7 @@
    "cell_type": "code",
    "execution_count": 8,
    "metadata": {
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": [
@@ -305,11 +261,7 @@
   {
    "cell_type": "code",
    "execution_count": 9,
-   "metadata": {
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "outputs": [
     {
      "name": "stdout",
@@ -340,11 +292,7 @@
   {
    "cell_type": "code",
    "execution_count": 32,
-   "metadata": {
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "#stampa le reviews in lingua differente dall'inglese\n",
@@ -354,11 +302,7 @@
   {
    "cell_type": "code",
    "execution_count": 10,
-   "metadata": {
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "outputs": [
     {
      "name": "stdout",
@@ -382,11 +326,7 @@
   {
    "cell_type": "code",
    "execution_count": 22,
-   "metadata": {
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "#df_revs.take(3)"
@@ -395,11 +335,7 @@
   {
    "cell_type": "code",
    "execution_count": 11,
-   "metadata": {
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "outputs": [],
    "source": [
     "#creiamo un nuovo dataframe con le review modificate, eliminando quelle \"vecchie\" e senza contare \n",
@@ -409,11 +345,7 @@
   {
    "cell_type": "code",
    "execution_count": 13,
-   "metadata": {
-    "collapsed": false,
-    "deletable": true,
-    "editable": true
-   },
+   "metadata": {},
    "outputs": [
     {
      "data": {
@@ -436,9 +368,7 @@
    "cell_type": "code",
    "execution_count": null,
    "metadata": {
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": [
@@ -458,9 +388,7 @@
    "cell_type": "code",
    "execution_count": null,
    "metadata": {
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": []
@@ -469,9 +397,7 @@
    "cell_type": "code",
    "execution_count": null,
    "metadata": {
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": []
@@ -480,20 +406,7 @@
    "cell_type": "code",
    "execution_count": null,
    "metadata": {
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
-   },
-   "outputs": [],
-   "source": []
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {
-    "collapsed": true,
-    "deletable": true,
-    "editable": true
+    "collapsed": true
    },
    "outputs": [],
    "source": []

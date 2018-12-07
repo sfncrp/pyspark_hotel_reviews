@@ -1,0 +1,4 @@
+etl_process.py: finished at 2018-12-04 23:21:00.348223 after 1 minutes
+etl_process.py: finished at 2018-12-04 23:49:38.220141 after 15 minutes
+etl_process.py: finished at 2018-12-05 08:22:23.192209 after 15 minutes
+feature_extraction.py: finished at 2018-12-07 01:09:59.928982 after 114 minutes
