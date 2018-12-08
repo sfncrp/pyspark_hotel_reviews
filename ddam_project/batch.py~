@@ -1,0 +1,11 @@
+import os
+import toLog
+
+log = toLog.log('starting batch')
+
+os.system('jupyter nbconvert --to script PARTE_1_etl_process.py ')
+
+
+
+
+

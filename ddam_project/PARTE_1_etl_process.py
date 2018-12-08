@@ -1,15 +1,17 @@
-
+#!/usr/bin/env python
 # coding: utf-8
 
 # # Data transforming and cleaning
 
-# In[53]:
+# In[1]:
+
 
 import toLog
 log = toLog.log('ETL process start')
 
 
-# In[94]:
+# In[2]:
+
 
 from pyspark.sql import SparkSession
 spark = (SparkSession.builder
@@ -19,25 +21,29 @@ spark = (SparkSession.builder
          )
 
 
-# In[95]:
+# In[3]:
+
 
 # read file from hdfs and infer schema
 df_raw = spark.read.csv("hdfs://masterbig-1.itc.unipi.it:54310/user/student18/Hotel_Reviews.csv", header = True, inferSchema = True)
 df_raw.printSchema()
 
 
-# In[96]:
+# In[4]:
+
 
 N_raw = df_raw.count()
 print(N_raw)
 
 
-# In[97]:
+# In[5]:
+
 
 from pyspark.sql.functions import monotonically_increasing_id
 
 
-# In[98]:
+# In[6]:
+
 
 # adding id
 df_raw_id = df_raw.withColumn('id', monotonically_increasing_id())
@@ -47,7 +53,8 @@ df_raw_id.take(1)
 
 # ## Reviews transformation
 
-# In[99]:
+# In[7]:
+
 
 def catReviews(row):
     if row["Negative_Review"] == "No Negative" and row["Positive_Review"] == "No Positive":
@@ -63,7 +70,8 @@ def catReviews(row):
         
 
 
-# In[100]:
+# In[8]:
+
 
 def catReviewsLen(row, L = 11):
     out = ""
@@ -76,9 +84,11 @@ def catReviewsLen(row, L = 11):
      
 
 
-# In[101]:
+# In[10]:
+
 
 def correction(row):
+    ''' Corrections and (some) stop words removal '''
     return (row.replace(" don t ", " don't ")
             .replace(" didn t ", " didn't ")
             .replace(" haven t ", " haven't ")
@@ -93,17 +103,20 @@ def correction(row):
             .replace(" wouldn t ", " wouldn't ")
             .replace(" wouldnt ", " wouldn't ")
             .replace(" i ", " I ")
+            .replace(" a "," ") # removing stop words 
+            .replace(" self "," ")
+            .replace(" it "," ")
+            .replace(" bit "," ")
+            .replace(" lot "," ")
+            .replace(" also "," ")
+            .replace(" wi-fi ","wifi")
+            .replace(" s ","")
+            .replace(" the "," ")
            )
 
 
-# In[102]:
+# In[ ]:
 
-#counting rows with empty reviews
-#df_raw_id.rdd.map(lambda x: (x['id'], catReviews(x))
-#                  .filter(lambda x: x[1] == "EMPTY").count().take(1) )
-
-
-# In[103]:
 
 rdd_reviews = (df_raw_id.rdd
                #.sample(False, 0.10)
@@ -113,36 +126,42 @@ rdd_reviews = (df_raw_id.rdd
               )
 
 
-# In[104]:
+# In[ ]:
+
 
 N_cat = rdd_reviews.count()
 print(N_cat)
 
 
-# In[105]:
+# In[ ]:
+
 
 # removed reviews:
 N_raw - N_cat
 
 
-# In[12]:
+# In[ ]:
+
 
 log.toLog( 'counting removed reviews: '+str(N_raw - N_cat))
 
 
-# In[34]:
+# In[ ]:
+
 
 #rdd_reviews.filter(lambda x: len(x[1])<1 ).count()
 
 
 # # Keep only English reviews
 
-# In[107]:
+# In[ ]:
+
 
 import langdetect as ld
 
 
-# In[108]:
+# In[ ]:
+
 
 #detect english reviews
 
@@ -160,23 +179,27 @@ def detect_Eng(review):
         return True
 
 
-# In[109]:
+# In[ ]:
+
 
 #stampa le reviews in lingua differente dall'inglese
 #rdd_reviews.filter(lambda x: not detect_Eng(x[1])).take(30)
 
 
-# In[110]:
+# In[ ]:
+
 
 #rdd_reviews.filter(lambda x: x[1] is None).count()
 
 
 # In[ ]:
 
+
 log.toLog('starting detect_Eng')
 
 
-# In[42]:
+# In[ ]:
+
 
 #remove EMPTY reviews, keep only english reviews
 #creiamo un nuovo data frame(df_revs) con colonne id, Review
@@ -188,31 +211,36 @@ df_lang = (rdd_reviews.filter(lambda x: detect_Eng(x[1]))
 df_lang.printSchema()
 
 
-# In[17]:
+# In[ ]:
+
 
 df_lang.take(3)
 
 
-# In[43]:
+# In[ ]:
+
 
 N_cat_lang = df_lang.count()
 N_cat_lang
 
 
-# In[44]:
+# In[ ]:
+
 
 # Not english reviews removed:
 N_cat - N_cat_lang
 
 
-# In[50]:
+# In[ ]:
+
 
 #creiamo un nuovo dataframe con le review modificate, eliminando quelle "vecchie" e senza contare 
 df_cleaned_lang = df_raw_id.join(df_lang, 'id', 'inner').drop("Positive_Review", "Negative_Review")
 df_cleaned_lang.printSchema()
 
 
-# In[51]:
+# In[ ]:
+
 
 N_cleaned_lang = df_cleaned_lang.count()
 log.toLog('counted not english rev, removed:' + str(N_raw-N_cleaned_lang))
@@ -221,20 +249,23 @@ N_cleaned_lang
 
 # # Hotel nationality
 
-# In[52]:
+# In[12]:
+
 
 import reverse_geocode
 log.toLog('starting country extraction')
 
 
-# In[57]:
+# In[13]:
+
 
 # example
 coord =[ (43.6753176,10.5408628) ]
 reverse_geocode.search(coord)
 
 
-# In[ ]:
+# In[14]:
+
 
 # check na value for lat/lng
 #(df_cleaned_lang
@@ -248,7 +279,9 @@ reverse_geocode.search(coord)
 
 
 
-# In[58]:
+
+# In[15]:
+
 
 df_coord = ( df_raw_id.select('id', 'lat', 'lng').rdd
             #.sample(False, 0.01)
@@ -259,18 +292,41 @@ df_coord = ( df_raw_id.select('id', 'lat', 'lng').rdd
            ).toDF(['id','h_city','h_country','h_country_code'])
 
 
-# In[60]:
-
-print(df_coord.head(5))
+# In[17]:
 
 
-# In[63]:
+df_coord.show(10)
+
+
+# In[19]:
+
+
+df_coord.createTempView('coord')
+
+
+# In[21]:
+
+
+spark.sql("SELECT h_city, COUNT(h_city) AS n_city           FROM coord           GROUP BY h_city           ORDER BY n_city DESC           ").show()            
+          
+
+
+# In[22]:
+
 
 hotel_countries = df_coord.select('h_country').distinct().rdd.map(lambda x: x['h_country']).collect()
 hotel_countries
 
 
-# In[64]:
+# In[25]:
+
+
+#hotel_cities = df_coord.select('h_city').distinct().rdd.map(lambda x: x['h_city']).collect()
+#hotel_cities
+
+
+# In[ ]:
+
 
 # estrarre la nazionalità dall'indirizzo
 def extractCountry(row):
@@ -281,7 +337,8 @@ def extractCountry(row):
  
 
 
-# In[74]:
+# In[ ]:
+
 
 rdd_hotel_countries = (df_raw_id
                        #.sample(False, 0.005)
@@ -289,23 +346,27 @@ rdd_hotel_countries = (df_raw_id
                       )
 
 
-# In[70]:
+# In[ ]:
+
 
 # check if all reviews have an associated hotel_country 
 # rdd_hotel_countries.filter(lambda x: x[1] == 'EMPTY').count()
 
 
-# In[71]:
+# In[ ]:
+
 
 # rdd_hotel_countries.take(1)
 
 
-# In[72]:
+# In[ ]:
+
 
 df_hotel_countries = rdd_hotel_countries.toDF(['id', 'Hotel_Country'])
 
 
-# In[73]:
+# In[ ]:
+
 
 print (df_hotel_countries.show())
 
@@ -314,26 +375,31 @@ print (df_hotel_countries.show())
 
 # In[ ]:
 
+
 log.toLog( 'started final join and write to hdfs')
 
 
 # In[ ]:
+
 
 df_cleaned = df_cleaned_lang.join(df_hotel_countries, 'id', 'inner')
 
 
 # In[ ]:
 
+
 df_cleaned.write.csv("hdfs://masterbig-1.itc.unipi.it:54310/user/student18/df_cleaned.csv", header = True)
 
 
-# In[ ]:
+# In[26]:
+
 
 log.toLog( 'etl notebook finished')
-log.close()
+log.close(' ')
 
 
 # In[ ]:
+
 
 
 

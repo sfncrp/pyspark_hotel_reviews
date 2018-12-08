@@ -23,6 +23,6 @@ class log:
         with open('log.txt', 'a') as f:
             f.write( str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M")) + \
                      ' -- from start: '+str(round(from_start/60))+ ' min' + \
-                     ' -- from prev : '+str(round(from_start/60))+ ' min -- ' + \
+                     ' -- from prev : '+str(round(from_prev/60))+ ' min -- ' + \
                      logtext + ' --\n')
             

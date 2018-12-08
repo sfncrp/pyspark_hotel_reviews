@@ -131,6 +131,8 @@ def getTriples(review):
                  {<PRP><RB>?<VBD><NNS><CC><NNS>}                 
                  {<PRP><RB>?<VBD><NN>}
                  {<PRP><RB>?<VBD><NNS>}
+                 {<PRP><RB>?<VB><NN>}
+                 {<PRP><RB>?<VB><NNS>}
                  
                  
                  {<PRP><RB>?<VBP><NN><CC><NN>}
