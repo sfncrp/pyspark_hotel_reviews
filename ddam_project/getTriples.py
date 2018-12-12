@@ -3,7 +3,6 @@
 """
 Created on Wed Dec  5 09:48:07 2018
 
-@author: ema
 """
 import nltk
 #dato un testo, ritorna una lista di triple <Feature, Modifier, Sentiment>, 
@@ -211,17 +210,14 @@ def getTriples(review):
         triple = []
         for element in results:
             for into in element:
-                #non considerando ciò che è un verbo o un pronome
-                #if into[1] != "VBD" or into[1] != "VBZ" or into[1] != "PRP" :
                     #se è un nome singolare o plurale allora è una feature
                 if into[1] == "NN" or into[1] == "NNS":
                     feature.append(into[0] ) 
                     #se è un aggettivo, o ci sono le parole 'love' e 'like', è un sentiment
-                if into[1] == "JJ" or into[1] == "VBG" or into[1] == "VBN" or into[0]== "love" or into[0]== "loved" or into[0]== "hate" or into[0]== "hated" or into[0] == "like":
+                if into[1] == "JJ" or into[1] == "VBG" or into[1] == "VBN" or into[0]== "love" or into[0]== "loved" or into[0]== "hate" or into[0]== "hated" or into[0] == "like" into[0] == "liked":
                     sentiment.append(into[0])
                     #se è un avverbio è un modificatore
                 if into[1] == "RB":
-                    #modifier.append(into[0]) 
                     #se l'avverbio è una negazione (contratta o intera) il modificatore (ulteriore) è 'not'
                     if into[0] == "n't" or into[0] == "not":
                         modifier.append("not")
@@ -243,12 +239,13 @@ def getTriples(review):
             
         return triple
 
-#I don't really like coffee 
-#vs  (like/JJ or like/IN)
-#I don't really like breakfast
-    
 if __name__=="__main__": 
     print(getTriples("I don't really like coffee"))   
+    print(getTriples("I didn't really liked breakfast "))  
+    print(getTriples("breakfast was good "))   
+    print(getTriples("I liked breakfast and staff was nice "))   
+    print(getTriples("I hated food"))  
+    print(getTriples("food was very bad")) 
     
  
     
